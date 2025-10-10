@@ -21,6 +21,8 @@ mod status;
 
 pub use status::FileChange;
 
+/// Contains all active diff providers. Diff providers are compiled in via features. Currently
+/// only `git` is supported.
 #[derive(Clone, Debug)]
 pub struct DiffProviderRegistry {
     providers: Vec<DiffProvider>,
