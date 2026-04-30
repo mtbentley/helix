@@ -959,10 +959,26 @@ impl<T: 'static + Send + Sync, D: 'static + Send + Sync> Picker<T, D> {
             }
 
             let loader = cx.editor.syn_loader.load();
+            let config = cx.editor.config();
 
             let syntax_highlighter =
                 EditorView::doc_syntax_highlighter(doc, offset.anchor, area.height, &loader);
             let mut overlay_highlights = Vec::new();
+            if doc
+                .language_config()
+                .and_then(|config| config.rainbow_brackets)
+                .unwrap_or(config.rainbow_brackets)
+            {
+                if let Some(overlay) = EditorView::doc_rainbow_highlights(
+                    doc,
+                    offset.anchor,
+                    area.height,
+                    &cx.editor.theme,
+                    &loader,
+                ) {
+                    overlay_highlights.push(overlay);
+                }
+            }
 
             EditorView::doc_diagnostics_highlights_into(
                 doc,
@@ -1048,23 +1064,23 @@ impl<I: 'static + Send + Sync, D: 'static + Send + Sync> Component for Picker<I,
         let close_fn = |picker: &mut Self| {
             // if the picker is very large don't store it as last_picker to avoid
             // excessive memory consumption
-            let callback: compositor::Callback = if picker.matcher.snapshot().item_count() > 100_000
-            {
-                Box::new(|compositor: &mut Compositor, _ctx| {
-                    // remove the layer
-                    compositor.pop();
-                })
-            } else {
-                // stop streaming in new items in the background, really we should
-                // be restarting the stream somehow once the picker gets
-                // reopened instead (like for an FS crawl) that would also remove the
-                // need for the special case above but that is pretty tricky
-                picker.version.fetch_add(1, atomic::Ordering::Relaxed);
-                Box::new(|compositor: &mut Compositor, _ctx| {
-                    // remove the layer
-                    compositor.last_picker = compositor.pop();
-                })
-            };
+            let callback: compositor::Callback =
+                if picker.matcher.snapshot().item_count() > 1_000_000 {
+                    Box::new(|compositor: &mut Compositor, _ctx| {
+                        // remove the layer
+                        compositor.pop();
+                    })
+                } else {
+                    // stop streaming in new items in the background, really we should
+                    // be restarting the stream somehow once the picker gets
+                    // reopened instead (like for an FS crawl) that would also remove the
+                    // need for the special case above but that is pretty tricky
+                    picker.version.fetch_add(1, atomic::Ordering::Relaxed);
+                    Box::new(|compositor: &mut Compositor, _ctx| {
+                        // remove the layer
+                        compositor.last_picker = compositor.pop();
+                    })
+                };
             EventResult::Consumed(Some(callback))
         };
 

@@ -63,7 +63,11 @@
           platformRustFlagsEnv = lib.optionalString pkgs.stdenv.isLinux "-Clink-arg=-Wl,--no-rosegment";
         in
           pkgs.mkShell {
-            inputsFrom = [self.checks.${system}.helix];
+            inputsFrom = [
+              (self.checks.${system}.helix.override {
+                includeGrammarIf = _: false;
+              })
+            ];
             nativeBuildInputs = with pkgs;
               [
                 lld
@@ -71,8 +75,7 @@
                 rust-bin.nightly.latest.rust-analyzer
               ]
               ++ (lib.optional (stdenv.isx86_64 && stdenv.isLinux) cargo-tarpaulin)
-              ++ (lib.optional stdenv.isLinux lldb)
-              ++ (lib.optional stdenv.isDarwin darwin.apple_sdk.frameworks.CoreFoundation);
+              ++ (lib.optional stdenv.isLinux lldb);
             shellHook = ''
               export RUST_BACKTRACE="1"
               export RUSTFLAGS="''${RUSTFLAGS:-""} ${commonRustFlagsEnv} ${platformRustFlagsEnv}"

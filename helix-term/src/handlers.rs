@@ -14,15 +14,19 @@ pub use helix_view::handlers::{word_index, Handlers};
 
 use self::blame::BlameHandler;
 use self::document_colors::DocumentColorsHandler;
+use self::document_links::DocumentLinksHandler;
 
 mod auto_save;
 pub mod blame;
 pub mod completion;
 pub mod diagnostics;
 mod document_colors;
+mod document_highlight;
+mod document_links;
 mod prompt;
 mod signature_help;
 mod snippet;
+mod workspace_trust;
 
 pub fn setup(config: Arc<ArcSwap<Config>>) -> Handlers {
     events::register();
@@ -31,6 +35,7 @@ pub fn setup(config: Arc<ArcSwap<Config>>) -> Handlers {
     let signature_hints = SignatureHelpHandler::new().spawn();
     let auto_save = AutoSaveHandler::new().spawn();
     let document_colors = DocumentColorsHandler::default().spawn();
+    let document_links = DocumentLinksHandler::default().spawn();
     let word_index = word_index::Handler::spawn();
     let blame = BlameHandler::default().spawn();
     let pull_diagnostics = PullDiagnosticsHandler::default().spawn();
@@ -41,6 +46,7 @@ pub fn setup(config: Arc<ArcSwap<Config>>) -> Handlers {
         signature_hints,
         auto_save,
         document_colors,
+        document_links,
         word_index,
         blame,
         pull_diagnostics,
@@ -50,11 +56,14 @@ pub fn setup(config: Arc<ArcSwap<Config>>) -> Handlers {
     helix_view::handlers::register_hooks(&handlers);
     completion::register_hooks(&handlers);
     signature_help::register_hooks(&handlers);
+    document_highlight::register_hooks(&handlers);
     auto_save::register_hooks(&handlers);
     diagnostics::register_hooks(&handlers);
     snippet::register_hooks(&handlers);
     document_colors::register_hooks(&handlers);
     blame::register_hooks(&handlers);
+    document_links::register_hooks(&handlers);
     prompt::register_hooks(&handlers);
+    workspace_trust::register_hooks(&handlers);
     handlers
 }

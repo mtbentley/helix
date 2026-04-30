@@ -75,7 +75,8 @@ FLAGS:
     --vsplit                       Split all given files vertically into different windows
     --hsplit                       Split all given files horizontally into different windows
     -w, --working-dir <path>       Specify an initial working directory
-    +N                             Open the first given file at line number N
+    +[N]                           Open the first given file at line number N, or the last line, if
+                                   N is not specified.
 ",
             env!("CARGO_PKG_NAME"),
             VERSION_AND_GIT_HASH,
@@ -139,14 +140,15 @@ FLAGS:
         }
     };
 
-    let lang_loader = helix_core::config::user_lang_loader().unwrap_or_else(|err| {
-        eprintln!("{}", err);
-        eprintln!("Press <ENTER> to continue with default language config");
-        use std::io::Read;
-        // This waits for an enter press.
-        let _ = std::io::stdin().read(&mut []);
-        helix_core::config::default_lang_loader()
-    });
+    let lang_loader =
+        helix_core::config::user_lang_loader(config.editor.insecure).unwrap_or_else(|err| {
+            eprintln!("{}", err);
+            eprintln!("Press <ENTER> to continue with default language config");
+            use std::io::Read;
+            // This waits for an enter press.
+            let _ = std::io::stdin().read(&mut []);
+            helix_core::config::default_lang_loader()
+        });
 
     // TODO: use the thread local executor to spawn the application task separately from the work pool
     let mut app = Application::new(args, config, lang_loader).context("unable to start Helix")?;
