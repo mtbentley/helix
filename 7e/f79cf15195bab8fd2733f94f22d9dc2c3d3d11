@@ -1,0 +1,301 @@
+helix-view/src/lib.rs
+  s_a073281dc832d0::t_a1e787c924678e 33-41
+runtime/queries/svelte/tags.scm
+  s_a073281dc832d0::t_a1e787c924678e 1-11
+helix-term/src/ui/picker.rs
+  s_a073281dc832d0::t_a1e787c924678e 1061-1063
+book/src/keymap.md
+  s_a073281dc832d0::t_a1e787c924678e 408-411
+Cargo.toml
+  s_a073281dc832d0::t_a1e787c924678e 41
+runtime/queries/openscad/injections.scm
+  s_a073281dc832d0::t_a1e787c924678e 1-2
+runtime/queries/svelte/locals.scm
+  s_a073281dc832d0::t_a1e787c924678e 1-8
+runtime/queries/robot/indents.scm
+  s_a073281dc832d0::t_a1e787c924678e 1-21
+helix-dap/src/client.rs
+  s_a073281dc832d0::t_a1e787c924678e 5,43,93,353-370,384,457-465
+runtime/queries/jsdoc/injections.scm
+  s_a073281dc832d0::t_a1e787c924678e 5-12
+runtime/queries/tolk/injections.scm
+  s_a073281dc832d0::t_a1e787c924678e 1-3
+helix-term/src/commands/syntax.rs
+  s_a073281dc832d0::t_a1e787c924678e 13,125,132-150,153-160,164-169,172-176,350,354,356
+helix-term/src/ui/popup.rs
+  s_a073281dc832d0::t_a1e787c924678e 348-350
+runtime/queries/cmake/indents.scm
+  s_a073281dc832d0::t_a1e787c924678e 7
+helix-term/src/commands.rs
+  s_a073281dc832d0::t_a1e787c924678e 1746,2568-2569,2576,2579,2589,2596,2601-2603,2624,2786,3271-3312,3316,3318,3326-3329,3357-3358,3375-3383,3397,3399,3401,3414-3421,3425-3428,3430-3431,3438-3439,3465,3741,3795,4009,6030-6032,6046,7072-7073
+helix-term/src/handlers/signature_help.rs
+  s_a073281dc832d0::t_a1e787c924678e 339-340
+helix-term/src/ui/editor.rs
+  s_a073281dc832d0::t_a1e787c924678e 1318-1319
+helix-term/src/ui/text_decorations/diagnostics.rs
+  s_a073281dc832d0::t_a1e787c924678e 29-32
+runtime/queries/r/tags.scm
+  s_a073281dc832d0::t_a1e787c924678e 1-9
+helix-lsp-types/Cargo.toml
+  s_a073281dc832d0::t_a1e787c924678e 26
+runtime/queries/ungrammar/highlights.scm
+  s_a073281dc832d0::t_a1e787c924678e 1,3-4,6-7,9,19-25
+runtime/queries/fsharp/injections.scm
+  s_a073281dc832d0::t_a1e787c924678e 7
+runtime/queries/concerto/locals.scm
+  s_a073281dc832d0::t_a1e787c924678e 1-88
+runtime/queries/r/highlights.scm
+  s_a073281dc832d0::t_a1e787c924678e 15,26-27,31,33,35,40-41,44-46,49-52,55,57-83,86-88,91-92
+helix-term/src/application.rs
+  s_a073281dc832d0::t_a1e787c924678e 731-745,1233-1243
+runtime/queries/rust/tags.scm
+  s_a073281dc832d0::t_a1e787c924678e 2,5,8,11,14,17,20,23,26,29
+runtime/queries/devicetree/highlights.scm
+  s_a073281dc832d0::t_a1e787c924678e 6-10,16-25,49-50,56,69,77-78,80,82-88,92-94,96
+runtime/queries/php/indents.scm
+  s_a073281dc832d0::t_a1e787c924678e 12
+runtime/queries/svelte/indents.scm
+  s_a073281dc832d0::t_a1e787c924678e 3-10,16-19
+helix-lsp/src/transport.rs
+  s_a073281dc832d0::t_a1e787c924678e 348-352,383
+runtime/queries/less/highlights.scm
+  s_a073281dc832d0::t_a1e787c924678e 1,4-8,11-22,27-36,39-42,44-48,50,53-83,86-87,90-91,94-102
+runtime/queries/go/highlights.scm
+  s_a073281dc832d0::t_a1e787c924678e 49-54,66-71
+runtime/queries/php/textobjects.scm
+  s_a073281dc832d0::t_a1e787c924678e 22-28
+runtime/queries/ejs/highlights.scm
+  s_a073281dc832d0::t_a1e787c924678e 7,10-13
+book/src/guides/locals.md
+  s_a073281dc832d0::t_a1e787c924678e 1-92
+book/src/generated/lang-support.md
+  s_a073281dc832d0::t_a1e787c924678e 36,49,165,235,240,247,272,281,300
+runtime/queries/tolk/indents.scm
+  s_a073281dc832d0::t_a1e787c924678e 1-24
+helix-term/build.rs
+  s_a073281dc832d0::t_a1e787c924678e 3-4,7-8
+runtime/queries/concerto/highlights.scm
+  s_a073281dc832d0::t_a1e787c924678e 1-235
+helix-dap/src/transport.rs
+  s_a073281dc832d0::t_a1e787c924678e 284
+helix-core/src/uri.rs
+  s_a073281dc832d0::t_a1e787c924678e 40-45
+helix-loader/src/main.rs
+  s_a073281dc832d0::t_a1e787c924678e 7-8,10
+runtime/queries/kotlin/highlights.scm
+  s_a073281dc832d0::t_a1e787c924678e 69-71,75,78,80
+runtime/queries/c/highlights.scm
+  s_a073281dc832d0::t_a1e787c924678e 6-13,58-59,131-134,144-148,184-204
+.github/workflows/build.yml
+  s_a073281dc832d0::t_a1e787c924678e 80
+runtime/queries/cpp/tags.scm
+  s_a073281dc832d0::t_a1e787c924678e 9-17
+runtime/queries/ghostty/highlights.scm
+  s_a073281dc832d0::t_a1e787c924678e 20,63-64,71-72
+runtime/queries/meson/highlights.scm
+  s_a073281dc832d0::t_a1e787c924678e 3-6,9-10,13-14,17-18,21-25,29-31,34-35,37,39-41,43-45,47-49
+runtime/queries/scala/highlights.scm
+  s_a073281dc832d0::t_a1e787c924678e 170-171
+runtime/queries/regex/highlights.scm
+  s_a073281dc832d0::t_a1e787c924678e 1,9-10,14-15,20-21,50-55,62-66
+runtime/queries/r/locals.scm
+  s_a073281dc832d0::t_a1e787c924678e 5
+helix-lsp/src/file_operations.rs
+  s_a073281dc832d0::t_a1e787c924678e 82-83,86-87,100-101,104-105
+helix-term/Cargo.toml
+  s_a073281dc832d0::t_a1e787c924678e 84,93,102
+runtime/queries/ecma/highlights.scm
+  s_a073281dc832d0::t_a1e787c924678e 267-279,281,310-341
+helix-lsp/src/client.rs
+  s_a073281dc832d0::t_a1e787c924678e 77,619-620,623-624,815-855,867-868,883-884,890-918
+runtime/queries/julia/locals.scm
+  s_a073281dc832d0::t_a1e787c924678e 10-11,14-16,18-20,22-24,27,52
+runtime/queries/verilog/locals.scm
+  s_a073281dc832d0::t_a1e787c924678e 9
+runtime/queries/erlang/locals.scm
+  s_a073281dc832d0::t_a1e787c924678e 10,15
+runtime/queries/python/highlights.scm
+  s_a073281dc832d0::t_a1e787c924678e 292,310-330
+helix-core/src/syntax.rs
+  s_a073281dc832d0::t_a1e787c924678e 35,621-623
+helix-term/src/ui/menu.rs
+  s_a073281dc832d0::t_a1e787c924678e 238-240,317
+runtime/queries/cpp/highlights.scm
+  s_a073281dc832d0::t_a1e787c924678e 16-19
+runtime/queries/svelte/folds.scm
+  s_a073281dc832d0::t_a1e787c924678e 2-10
+runtime/queries/go/locals.scm
+  s_a073281dc832d0::t_a1e787c924678e 25
+runtime/queries/php-only/highlights.scm
+  s_a073281dc832d0::t_a1e787c924678e 2,48-51,65
+helix-term/src/ui/markdown.rs
+  s_a073281dc832d0::t_a1e787c924678e 309
+runtime/queries/svelte/rainbows.scm
+  s_a073281dc832d0::t_a1e787c924678e 1-9,12-18,23-25,28-38
+runtime/queries/concerto/indents.scm
+  s_a073281dc832d0::t_a1e787c924678e 1-21
+runtime/queries/dart/highlights.scm
+  s_a073281dc832d0::t_a1e787c924678e 20-27,92-99,207,214-215,252
+helix-term/src/args.rs
+  s_a073281dc832d0::t_a1e787c924678e 16,26,51
+helix-term/src/compositor.rs
+  s_a073281dc832d0::t_a1e787c924678e 223-226
+runtime/queries/latex/indents.scm
+  s_a073281dc832d0::t_a1e787c924678e 1-17
+helix-view/src/gutter.rs
+  s_a073281dc832d0::t_a1e787c924678e 287,289
+helix-term/src/ui/statusline.rs
+  s_a073281dc832d0::t_a1e787c924678e 466-468,470
+.github/workflows/release.yml
+  s_a073281dc832d0::t_a1e787c924678e 54,79-82,115,118,183,225
+runtime/queries/r/rainbows.scm
+  s_a073281dc832d0::t_a1e787c924678e 1-16
+runtime/queries/go/indents.scm
+  s_a073281dc832d0::t_a1e787c924678e 15,19-20,50-55
+runtime/queries/diff/highlights.scm
+  s_a073281dc832d0::t_a1e787c924678e 7-10
+runtime/queries/jsdoc/highlights.scm
+  s_a073281dc832d0::t_a1e787c924678e 3
+helix-term/src/main.rs
+  s_a073281dc832d0::t_a1e787c924678e 63,70,109,114,127-130
+runtime/queries/d/highlights.scm
+  s_a073281dc832d0::t_a1e787c924678e 207-209,225-228,233-236
+runtime/queries/svelte/injections.scm
+  s_a073281dc832d0::t_a1e787c924678e 1-2,4,7,9-10,13-14,16,18,20,22-31,33-34,36,39,41-55,57,60,62-74,77-182
+helix-dap-types/src/lib.rs
+  s_a073281dc832d0::t_a1e787c924678e 926-981
+helix-term/src/handlers/document_highlight.rs
+  s_a073281dc832d0::t_a1e787c924678e 84
+runtime/queries/swift/textobjects.scm
+  s_a073281dc832d0::t_a1e787c924678e 10-23,30
+runtime/queries/robot/highlights.scm
+  s_a073281dc832d0::t_a1e787c924678e 13-15
+book/src/SUMMARY.md
+  s_a073281dc832d0::t_a1e787c924678e 30
+runtime/queries/concerto/textobjects.scm
+  s_a073281dc832d0::t_a1e787c924678e 1-95
+book/src/guides/tags.md
+  s_a073281dc832d0::t_a1e787c924678e 16-21,37-55
+runtime/themes/akari-dawn.toml
+  s_a073281dc832d0::t_a1e787c924678e 170-171,255
+runtime/queries/markdown/tags.scm
+  s_a073281dc832d0::t_a1e787c924678e 1
+runtime/queries/cmake/highlights.scm
+  s_a073281dc832d0::t_a1e787c924678e 16-18,28-33,48-49,52-54,58-60,64,69-71,77-80,91,97-99,106
+runtime/queries/ocaml/highlights.scm
+  s_a073281dc832d0::t_a1e787c924678e 6,141-142,153-156
+runtime/queries/python/locals.scm
+  s_a073281dc832d0::t_a1e787c924678e 50
+runtime/queries/r/textobjects.scm
+  s_a073281dc832d0::t_a1e787c924678e 1-16
+runtime/queries/java/highlights.scm
+  s_a073281dc832d0::t_a1e787c924678e 54-59,65-71,90-95
+runtime/queries/css/highlights.scm
+  s_a073281dc832d0::t_a1e787c924678e 57,62
+runtime/queries/regex/rainbows.scm
+  s_a073281dc832d0::t_a1e787c924678e 2-3,14,16
+helix-loader/src/grammar.rs
+  s_a073281dc832d0::t_a1e787c924678e 4-5,91,98-112,159-161,167,171-174,176-177,179-184,216-218,301-331,357-358,369,378-381,393,395,422-423,425,432,434-436
+runtime/queries/rust/locals.scm
+  s_a073281dc832d0::t_a1e787c924678e 46-47,53,56,59,61,64
+helix-view/src/editor.rs
+  s_a073281dc832d0::t_a1e787c924678e 1638-1727,1778,1794,1938,2310,2315,2552-2558
+runtime/queries/svelte/highlights.scm
+  s_a073281dc832d0::t_a1e787c924678e 1-2,4-26,29,31-36,38,40-53,55-60,62-64,66-69,75-81,83-95,97-139
+runtime/queries/pascal/highlights.scm
+  s_a073281dc832d0::t_a1e787c924678e 80-83,239,325
+helix-term/tests/test/splits.rs
+  s_a073281dc832d0::t_a1e787c924678e 217-263
+helix-view/src/handlers/lsp.rs
+  s_a073281dc832d0::t_a1e787c924678e 243,249-254,256-261
+runtime/themes/licenses/akari.license
+  s_a073281dc832d0::t_a1e787c924678e 3
+runtime/themes/akari-night.toml
+  s_a073281dc832d0::t_a1e787c924678e 170-171,223-225,231,240,249,254-255,259-260
+helix-term/tests/test/commands/write.rs
+  s_a073281dc832d0::t_a1e787c924678e 121-124,365-368,394-397,784-787
+runtime/queries/c/tags.scm
+  s_a073281dc832d0::t_a1e787c924678e 16-18
+runtime/queries/julia/highlights.scm
+  s_a073281dc832d0::t_a1e787c924678e 40,59,66-67,70-74,78-79,124-125,127,130-131,133-134,136-137,139,146-147,149,151,154-156,167,170,361-362
+helix-lsp/src/lib.rs
+  s_a073281dc832d0::t_a1e787c924678e 434-451,453-476,624,657,712,900,1109-1156
+languages.toml
+  s_a073281dc832d0::t_a1e787c924678e 37-38,143,150,172,380,420,433,448,487,501,517,579,633,677,714,765,799,918,946,1000,1077,1127,1147,1157,1199,1251,1339,1355,1367,1378,1390,1430,1480,1495,1554,1574,1600,1607,1655,1868,1947,1957,1998,2106,2126,2138,2153,2167,2195,2221,2252,2264,2274,2286,2340,2385,2399,2415,2475,2497,2507,2521,2547,2569,2671,2702,2781,2811,2854,2876,2890,2915,2980,3088,3119,3197,3222,3376,3444,3473,3511,3578,3609,3621,3679,3705,3717,3730,3788,3799,3826,3840,3875,3883,4108,4165,4196-4207,4268,4423,4527,4555,4650,4700,4758,4798,4814,4874,4905,4924-4934,4937,4992,5045,5056,5063,5067-5068,5079,5147,5266,5344,5386,5484-5497
+helix-view/src/document.rs
+  s_a073281dc832d0::t_a1e787c924678e 1460,2106-2107,2116
+runtime/queries/meson/indents.scm
+  s_a073281dc832d0::t_a1e787c924678e 2-5,11-12
+runtime/queries/php/injections.scm
+  s_a073281dc832d0::t_a1e787c924678e 10,16,23
+runtime/queries/svelte/textobjects.scm
+  s_a073281dc832d0::t_a1e787c924678e 1-10
+helix-term/src/ui/prompt.rs
+  s_a073281dc832d0::t_a1e787c924678e 615-617
+runtime/queries/c-sharp/highlights.scm
+  s_a073281dc832d0::t_a1e787c924678e 109,188-197,208-233,237-238
+runtime/queries/erlang/tags.scm
+  s_a073281dc832d0::t_a1e787c924678e 2,4,10-16,24,27,34,38,45,48,54,63-64,66,70
+runtime/queries/go/textobjects.scm
+  s_a073281dc832d0::t_a1e787c924678e 5,30,34
+helix-term/src/ui/mod.rs
+  s_a073281dc832d0::t_a1e787c924678e 102,114-115,142-143,150,159-160
+runtime/queries/jsonnet/highlights.scm
+  s_a073281dc832d0::t_a1e787c924678e 15-17
+runtime/queries/ecma/injections.scm
+  s_a073281dc832d0::t_a1e787c924678e 10,21,61,64-67,104-124
+runtime/queries/php/highlights.scm
+  s_a073281dc832d0::t_a1e787c924678e 2,48-49,55-56,119-122,168-172,211-213,215,261
+runtime/queries/rust/highlights.scm
+  s_a073281dc832d0::t_a1e787c924678e 434-438
+helix-view/src/theme.rs
+  s_a073281dc832d0::t_a1e787c924678e 54-64,69-71,75-81,83-84,87
+runtime/queries/_typescript/highlights.scm
+  s_a073281dc832d0::t_a1e787c924678e 89,98,101-103,158-171
+book/src/themes.md
+  s_a073281dc832d0::t_a1e787c924678e 365,367,369,371
+runtime/queries/julia/textobjects.scm
+  s_a073281dc832d0::t_a1e787c924678e 3-4,14,18,29
+runtime/queries/javascript/highlights.scm
+  s_a073281dc832d0::t_a1e787c924678e 4-8
+helix-loader/src/workspace_trust.rs
+  s_a073281dc832d0::t_a1e787c924678e 1-5,151,171,183
+runtime/queries/dart/textobjects.scm
+  s_a073281dc832d0::t_a1e787c924678e 10-12
+helix-view/src/handlers/dap.rs
+  s_a073281dc832d0::t_a1e787c924678e 335-374,495
+runtime/queries/pod/highlights.scm
+  s_a073281dc832d0::t_a1e787c924678e 94,96
+runtime/queries/fsharp/highlights.scm
+  s_a073281dc832d0::t_a1e787c924678e 18,33-34,36,39,326
+helix-dap/src/lib.rs
+  s_a073281dc832d0::t_a1e787c924678e 10,79-81,104-106,121-171
+helix-term/src/commands/dap.rs
+  s_a073281dc832d0::t_a1e787c924678e 392-396,398,646-647,687-688
+helix-view/src/view.rs
+  s_a073281dc832d0::t_a1e787c924678e 59,99-109,111-114,713-722,1132-1264
+runtime/queries/swift/highlights.scm
+  s_a073281dc832d0::t_a1e787c924678e 1-9,153-159,163-166,215-217
+runtime/queries/tolk/highlights.scm
+  s_a073281dc832d0::t_a1e787c924678e 1-129
+runtime/queries/hurl/highlights.scm
+  s_a073281dc832d0::t_a1e787c924678e 76-82
+runtime/themes/kanagawa.toml
+  s_a073281dc832d0::t_a1e787c924678e 37
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "7ef79cf15195bab8fd2733f94f22d9dc2c3d3d11",
+  "prompts": {},
+  "sessions": {
+    "s_a073281dc832d0": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019e8ebf-e811-7161-908f-f1367f27d63c",
+        "model": "gpt-5.5"
+      },
+      "human_author": "Madison Bentley <madison.bentley@clay.com>"
+    }
+  }
+}
