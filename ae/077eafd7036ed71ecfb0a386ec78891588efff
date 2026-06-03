@@ -1,0 +1,138 @@
+steel-docs.md
+  s_a073281dc832d0::t_0765f5efb02007 1-3318
+helix-term/src/commands/engine/steel/treesitter.scm
+  s_a073281dc832d0::t_0765f5efb02007 1-370
+helix-term/src/ui/editor.rs
+  s_a073281dc832d0::t_0765f5efb02007 2,4,994-998,1640,1645,1675-1689
+helix-view/src/info.rs
+  s_a073281dc832d0::t_0765f5efb02007 43-57,62
+helix-term/src/commands/engine/steel/components.scm
+  s_a073281dc832d0::t_0765f5efb02007 1-1282
+helix-lsp/src/lib.rs
+  s_a073281dc832d0::t_0765f5efb02007 489-490,529,545-546,573
+helix-tui/src/extension.rs
+  s_a073281dc832d0::t_0765f5efb02007 1-20
+helix-tui/src/lib.rs
+  s_a073281dc832d0::t_0765f5efb02007 3
+helix-term/src/ui/document.rs
+  s_a073281dc832d0::t_0765f5efb02007 51
+helix-core/src/syntax.rs
+  s_a073281dc832d0::t_0765f5efb02007 49-61,287,294,333,419-474,532,544
+Cargo.toml
+  s_a073281dc832d0::t_0765f5efb02007 43
+helix-term/tests/test/helpers.rs
+  s_a073281dc832d0::t_0765f5efb02007 13
+helix-tui/src/backend/termina.rs
+  s_a073281dc832d0::t_0765f5efb02007 281-284
+helix-view/src/graphics.rs
+  s_a073281dc832d0::t_0765f5efb02007 425-450
+helix-term/src/compositor.rs
+  s_a073281dc832d0::t_0765f5efb02007 16,77-80,144-151,157,184-187,204-206
+helix-lsp/Cargo.toml
+  s_a073281dc832d0::t_0765f5efb02007 35-37
+helix-core/src/command_line.rs
+  s_a073281dc832d0::t_0765f5efb02007 776-782,889,1140
+helix-term/src/commands/engine/steel/static.scm
+  s_a073281dc832d0::t_0765f5efb02007 1-175
+helix-term/src/application.rs
+  s_a073281dc832d0::t_0765f5efb02007 5,26,60,62,64,150,153-172,378-381,424,482-507,1021-1035,1189-1214,1281,1427
+helix-term/src/main.rs
+  s_a073281dc832d0::t_0765f5efb02007 6,43,121-124
+helix-term/src/commands/engine/steel/configuration.scm
+  s_a073281dc832d0::t_0765f5efb02007 1-1085
+helix-view/src/editor.rs
+  s_a073281dc832d0::t_0765f5efb02007 7,470,472-475,776-779,1205-1208,1312-1321,1340,1445,1919-1920,2246-2249
+helix-term/.clippy.toml
+  s_a073281dc832d0::t_0765f5efb02007 1-3
+helix-view/src/lib.rs
+  s_a073281dc832d0::t_0765f5efb02007 21-22
+helix-tui/src/widgets/block.rs
+  s_a073281dc832d0::t_0765f5efb02007 124-201
+helix-term/src/commands/engine/steel/components.rs
+  s_a073281dc832d0::t_0765f5efb02007 1-1007
+helix-view/src/events.rs
+  s_a073281dc832d0::t_0765f5efb02007 32
+helix-tui/src/buffer.rs
+  s_a073281dc832d0::t_0765f5efb02007 594-598
+helix-core/src/syntax/config.rs
+  s_a073281dc832d0::t_0765f5efb02007 23,118,120,122,160,370,433,506,650
+helix-tui/src/widgets/list.rs
+  s_a073281dc832d0::t_0765f5efb02007 3,5,7-9,11,125-126,177,231,234
+helix-term/src/commands/engine/steel/editor.scm
+  s_a073281dc832d0::t_0765f5efb02007 1-340
+helix-term/src/job.rs
+  s_a073281dc832d0::t_0765f5efb02007 8,13-14,18-20,41-47,49,62-64,66,68,104,121-130,132,140,150-160
+helix-term/src/commands/engine/steel/misc.scm
+  s_a073281dc832d0::t_0765f5efb02007 1-334
+helix-view/src/theme.rs
+  s_a073281dc832d0::t_0765f5efb02007 92-94,104,108-111,114-118,120-126,128,130-131,442-445,450-462,515,539
+helix-term/src/keymap.rs
+  s_a073281dc832d0::t_0765f5efb02007 212-228,313,321-326,328,376-382,445
+helix-term/src/commands.rs
+  s_a073281dc832d0::t_0765f5efb02007 2,17-18,20,257-264,317-325,678,680-683,685-690,3607-3623,3625-3627
+helix-term/src/ui/statusline.rs
+  s_a073281dc832d0::t_0765f5efb02007 454,512
+helix-view/src/extension.rs
+  s_a073281dc832d0::t_0765f5efb02007 1-130
+xtask/src/main.rs
+  s_a073281dc832d0::t_0765f5efb02007 1,11,50-125,170-171,189-190
+STEEL.md
+  s_a073281dc832d0::t_0765f5efb02007 1-267
+helix-tui/src/widgets/mod.rs
+  s_a073281dc832d0::t_0765f5efb02007 13,19
+helix-term/src/commands/typed.rs
+  s_a073281dc832d0::t_0765f5efb02007 20-21,44,51,58,781-782,835-841,1059-1060,4075-4108,4128-4151,4173-4182,4258-4261
+helix-core/Cargo.toml
+  s_a073281dc832d0::t_0765f5efb02007 17,57
+helix-core/src/extensions.rs
+  s_a073281dc832d0::t_0765f5efb02007 1-1185
+helix-term/src/commands/engine/steel/ext.scm
+  s_a073281dc832d0::t_0765f5efb02007 1-80
+xtask/src/codegen.rs
+  s_a073281dc832d0::t_0765f5efb02007 1-5
+helix-lsp/src/client.rs
+  s_a073281dc832d0::t_0765f5efb02007 1788-1874
+helix-term/src/ui/extension.rs
+  s_a073281dc832d0::t_0765f5efb02007 1-19
+helix-view/src/tree.rs
+  s_a073281dc832d0::t_0765f5efb02007 672-678
+helix-term/src/ui/mod.rs
+  s_a073281dc832d0::t_0765f5efb02007 4,458,463,466-469
+helix-term/src/commands/engine/steel/keymaps.scm
+  s_a073281dc832d0::t_0765f5efb02007 1-248
+helix-core/src/lib.rs
+  s_a073281dc832d0::t_0765f5efb02007 37-38
+helix-view/Cargo.toml
+  s_a073281dc832d0::t_0765f5efb02007 16,53-54
+helix-term/src/commands/engine.rs
+  s_a073281dc832d0::t_0765f5efb02007 1-347
+helix-term/src/commands/engine/steel/themes.scm
+  s_a073281dc832d0::t_0765f5efb02007 1-394
+helix-term/src/commands/engine/steel/mod.rs
+  s_a073281dc832d0::t_0765f5efb02007 1-1482,1488-5538
+  s_a073281dc832d0::t_e159f9c76476b7 1483-1487
+helix-tui/Cargo.toml
+  s_a073281dc832d0::t_0765f5efb02007 16,29
+helix-event/Cargo.toml
+  s_a073281dc832d0::t_0765f5efb02007 20
+helix-term/src/commands/engine/steel/commands.scm
+  s_a073281dc832d0::t_0765f5efb02007 1-18
+languages.toml
+  s_a073281dc832d0::t_0765f5efb02007 5194
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "ae077eafd7036ed71ecfb0a386ec78891588efff",
+  "prompts": {},
+  "sessions": {
+    "s_a073281dc832d0": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019e8ebf-e811-7161-908f-f1367f27d63c",
+        "model": "gpt-5.5"
+      },
+      "human_author": "Madison Bentley <madison.bentley@clay.com>"
+    }
+  }
+}
