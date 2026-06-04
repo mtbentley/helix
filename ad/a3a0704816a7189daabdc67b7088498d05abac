@@ -1,0 +1,20 @@
+helix-vcs/src/git/blame.rs
+  s_a073281dc832d0::t_8df81837c25726 92,97,108,550-555,557-571
+  s_a073281dc832d0::t_e948d053001ae7 556
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.3",
+  "base_commit_sha": "ada3a0704816a7189daabdc67b7088498d05abac",
+  "prompts": {},
+  "sessions": {
+    "s_a073281dc832d0": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019e8ebf-e811-7161-908f-f1367f27d63c",
+        "model": "gpt-5.5"
+      },
+      "human_author": "Madison Bentley <madison.bentley@clay.com>"
+    }
+  }
+}
