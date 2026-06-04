@@ -89,10 +89,12 @@ impl FileBlame {
 
     /// Compute blame for this file (expensive)
     pub fn try_new(file: PathBuf) -> Result<Self> {
+        let file = gix::path::realpath(&file).context("resolve symlinks")?;
         let thread_safe_repo =
             open_repo(get_repo_dir(&file)?).context("Failed to open git repo")?;
         let repo = thread_safe_repo.to_thread_local();
         let head = repo.head()?.peel_to_commit()?.id;
+        let work_dir = repo.workdir().context("repo has no worktree")?;
 
         let mut resource_cache = repo.diff_resource_cache_for_tree_diff()?;
         let file_blame = gix::blame::file(
@@ -103,11 +105,7 @@ impl FileBlame {
             // NOTE: bstr always uses unix separators `/`, even on
             // Windows which uses the `\` separator
             &gix::path::to_unix_separators_on_windows(gix::path::try_into_bstr(
-                file.strip_prefix(
-                    repo.path()
-                        .parent()
-                        .context("Could not get the parent path of the repo")?,
-                )?,
+                file.strip_prefix(work_dir)?,
             )?),
             gix::blame::Options::default(),
         )?
@@ -547,6 +545,30 @@ mod test {
                 "]" 7,
                 "  four" 5;
         };
+    }
+
+    #[test]
+    pub fn blamed_lines_in_worktree() {
+        use crate::git::test::exec_git_cmd;
+
+        let repo = empty_git_repo();
+        let file = repo.path().join("file.txt");
+        std::fs::write(&file, b"fn main() {}\n").unwrap();
+        create_commit_with_message(repo.path(), true, "initial commit");
+
+        let worktree_parent = tempfile::tempdir().expect("create temp dir for git worktree");
+        let worktree = worktree_parent.path().join("worktree");
+        exec_git_cmd(
+            &["worktree", "add", "--detach", worktree.to_str().unwrap(), "HEAD"],
+            repo.path(),
+        );
+
+        let blame = FileBlame::try_new(worktree.join("file.txt")).unwrap();
+
+        assert_eq!(
+            blame.blame_for_line(0, 0, 0).commit_title,
+            Some(concat!("initial commit", newline_literal!()).to_owned())
+        );
     }
 
     fn bob() -> LineBlame {
