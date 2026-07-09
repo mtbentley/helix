@@ -88,10 +88,10 @@ impl FileBlame {
     }
 
     /// Compute blame for this file (expensive)
-    pub fn try_new(file: PathBuf) -> Result<Self> {
+    pub fn try_new(file: PathBuf, trust_full: bool) -> Result<Self> {
         let file = gix::path::realpath(&file).context("resolve symlinks")?;
         let thread_safe_repo =
-            open_repo(get_repo_dir(&file)?).context("Failed to open git repo")?;
+            open_repo(get_repo_dir(&file)?, trust_full).context("Failed to open git repo")?;
         let repo = thread_safe_repo.to_thread_local();
         let head = repo.head()?.peel_to_commit()?.id;
         let work_dir = repo.workdir().context("repo has no worktree")?;
@@ -406,7 +406,7 @@ mod test {
                         // because we won't show it to the user.
                         $(
                             let blame_result =
-                                FileBlame::try_new(file.clone())
+                                FileBlame::try_new(file.clone(), true)
                                     .unwrap()
                                     .blame_for_line(line_number, added_lines, removed_lines)
                                     .commit_title;
@@ -563,7 +563,7 @@ mod test {
             repo.path(),
         );
 
-        let blame = FileBlame::try_new(worktree.join("file.txt")).unwrap();
+        let blame = FileBlame::try_new(worktree.join("file.txt"), true).unwrap();
 
         assert_eq!(
             blame.blame_for_line(0, 0, 0).commit_title,

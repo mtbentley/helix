@@ -26,6 +26,9 @@ pub struct BlameEvent {
     /// If this field is set, when we obtain the blame for the file we will
     /// show blame for this line in the status line
     pub line: Option<u32>,
+    /// Whether the workspace owning `path` is trusted enough to open the git
+    /// repository with `gix::sec::Trust::Full` (see [`GitDiffProvider`]).
+    pub trust_full: bool,
 }
 
 pub struct Handlers {
@@ -39,6 +42,7 @@ pub struct Handlers {
     pub blame: Sender<BlameEvent>,
     pub pull_diagnostics: Sender<lsp::PullDiagnosticsEvent>,
     pub pull_all_documents_diagnostics: Sender<lsp::PullAllDocumentsDiagnosticsEvent>,
+    pub code_action_hint: Sender<lsp::CodeActionHintEvent>,
 }
 
 impl Handlers {
