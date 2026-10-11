@@ -50,11 +50,11 @@ impl Clone for LanguageData {
     fn clone(&self) -> Self {
         Self {
             config: self.config.clone(),
-            syntax: OnceCell::new(),
-            indent_query: OnceCell::new(),
-            textobject_query: OnceCell::new(),
-            tag_query: OnceCell::new(),
-            rainbow_query: OnceCell::new(),
+            syntax: OnceLock::new(),
+            indent_query: OnceLock::new(),
+            textobject_query: OnceLock::new(),
+            tag_query: OnceLock::new(),
+            rainbow_query: OnceLock::new(),
         }
     }
 }
@@ -462,7 +462,10 @@ impl Loader {
             .map(|language| &mut language.config)
     }
 
-    pub fn add_language(&mut self, config: LanguageConfiguration) {
+    pub fn add_language(&mut self, mut config: LanguageConfiguration) {
+        if config.language.is_none() {
+            config.language = Some(Language(self.languages.len() as u32));
+        }
         self.languages.push(LanguageData::new(config));
     }
 

@@ -54,19 +54,19 @@ impl Custom for SteelSpan {}
 
 impl SteelSpan {
     pub fn new(content: String, style: Style) -> Self {
-        return Self { content, style };
+        Self { content, style }
     }
 
     pub fn get_content(&self) -> String {
-        return self.content.to_string();
+        self.content.to_string()
     }
 
     pub fn get_style(&self) -> Style {
-        return self.style;
+        self.style
     }
 }
 
-pub fn render_custom_status<'a>(
+pub fn render_custom_status(
     elem: &CustomStatusElement,
     ctx: &mut compositor::Context,
     view_id: ViewId,
@@ -102,7 +102,7 @@ pub fn render_custom_status<'a>(
                     _ => return steelerr!(TypeMismatch => "Wrong return type for status element!"),
                 };
 
-                fn steel_to_span<'a>(val: SteelVal) -> Result<Span<'a>, SteelErr> {
+                fn steel_to_span(val: SteelVal) -> Result<Span<'static>, SteelErr> {
                     match val {
                         SteelVal::Custom(custom) => {
                             let c = custom.write();
@@ -111,21 +111,20 @@ pub fn render_custom_status<'a>(
                                 return steelerr!(
                                     TypeMismatch =>
                                     "Cannot convert value to Span!"
-                                )
-                                .into();
+                                );
                             };
                             Ok(Span::styled(s.get_content(), s.get_style()))
                         }
-                        _ => steelerr!(TypeMismatch => "not a custom type!").into(),
+                        _ => steelerr!(TypeMismatch => "not a custom type!"),
                     }
                 }
 
                 spans.into_iter().map(steel_to_span).collect()
             }) {
-            Ok(ret) => return ret,
+            Ok(ret) => ret,
             Err(e) => {
                 super::present_error_inside_engine_context(&mut ctx, guard, e);
-                return vec![];
+                vec![]
             }
         }
     })
@@ -233,7 +232,7 @@ fn push_status_elem(
     cfg.store_config(app_config);
     Ok(())
 }
-pub fn helix_component_module(generate_sources: bool) -> BuiltInModule {
+pub fn helix_component_module(generate_sources: bool) -> (BuiltInModule, String) {
     let mut module = BuiltInModule::new("helix/components");
 
     let mut builtin_components_module = include_str!("components.scm").to_string();
@@ -764,7 +763,7 @@ event: Event?"#, $name, $name));
         configure_lsp_builtins("component", &module);
     }
 
-    module
+    (module, builtin_components_module)
 }
 
 fn buffer_set_string(
@@ -797,7 +796,7 @@ fn buffer_set_string(
 
 /// A dynamic component, used for rendering
 pub struct SteelDynamicComponent {
-    name: String,
+    name: SteelString,
     // This _should_ be a struct, but in theory can be whatever you want. It will be the first argument
     // passed to the functions in the remainder of the struct.
     state: SteelVal,
@@ -821,7 +820,7 @@ pub struct SteelDynamicComponent {
 
 impl SteelDynamicComponent {
     pub fn new(
-        name: String,
+        name: SteelString,
         state: SteelVal,
         render: SteelVal,
         h: HashMap<String, SteelVal>,
@@ -847,7 +846,7 @@ impl SteelDynamicComponent {
     }
 
     pub fn new_dyn(
-        name: String,
+        name: SteelString,
         state: SteelVal,
         render: SteelVal,
         h: HashMap<String, SteelVal>,
@@ -941,9 +940,11 @@ impl Component for SteelDynamicComponent {
     ) -> compositor::EventResult {
         // Ignore this event off the stack
         if !is_current_generation(self.generation) {
+            let name = self.name.clone();
+
             return compositor::EventResult::Ignored(Some(Box::new(
-                |compositor: &mut compositor::Compositor, _| {
-                    compositor.pop();
+                move |compositor: &mut compositor::Compositor, _| {
+                    compositor.remove_by_dynamic_name(&name);
                 },
             )));
         }
@@ -991,23 +992,31 @@ impl Component for SteelDynamicComponent {
                     let value = SteelEventResult::from_steelval(&v);
 
                     match value {
-                        Ok(SteelEventResult::Close) => compositor::EventResult::Consumed(Some(
-                            Box::new(|compositor: &mut compositor::Compositor, _| {
-                                // remove the layer
-                                compositor.pop();
-                            }),
-                        )),
+                        Ok(SteelEventResult::Close) => {
+                            let name = self.name.clone();
+
+                            compositor::EventResult::Consumed(Some(Box::new(
+                                move |compositor: &mut compositor::Compositor, _| {
+                                    // remove the layer
+                                    compositor.remove_by_dynamic_name(&name);
+                                },
+                            )))
+                        }
                         Ok(SteelEventResult::Consumed) => compositor::EventResult::Consumed(None),
                         Ok(SteelEventResult::ConsumedWithoutRerender) => {
                             compositor::EventResult::ConsumedWithoutRerender
                         }
                         Ok(SteelEventResult::Ignored) => compositor::EventResult::Ignored(None),
-                        Ok(SteelEventResult::IgnoreAndClose) => compositor::EventResult::Ignored(
-                            Some(Box::new(|compositor: &mut compositor::Compositor, _| {
-                                // remove the layer
-                                compositor.pop();
-                            })),
-                        ),
+                        Ok(SteelEventResult::IgnoreAndClose) => {
+                            let name = self.name.clone();
+
+                            compositor::EventResult::Ignored(Some(Box::new(
+                                move |compositor: &mut compositor::Compositor, _| {
+                                    // remove the layer
+                                    compositor.remove_by_dynamic_name(&name);
+                                },
+                            )))
+                        }
                         _ => compositor::EventResult::Ignored(None),
                     }
                 }

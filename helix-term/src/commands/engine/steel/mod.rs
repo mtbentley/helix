@@ -41,7 +41,7 @@ use helix_view::{
     theme::Color,
     DocumentId, Editor, Theme, ViewId,
 };
-use once_cell::sync::{Lazy, OnceCell};
+use std::sync::{LazyLock, OnceLock};
 use serde_json::Value;
 use steel::{
     compiler::modules::steel_home,
@@ -91,17 +91,17 @@ use components::helix_component_module;
 use super::{Context, TerminalEventReaderHandle};
 use insert::insert_char;
 
-static INTERRUPT_HANDLER: Lazy<Mutex<Option<Arc<InterruptHandler>>>> =
-    Lazy::new(|| Mutex::new(None));
-static SAFEPOINT_HANDLER: Lazy<Mutex<Option<Arc<SafepointHandler>>>> =
-    Lazy::new(|| Mutex::new(None));
+static INTERRUPT_HANDLER: LazyLock<Mutex<Option<Arc<InterruptHandler>>>> =
+    LazyLock::new(|| Mutex::new(None));
+static SAFEPOINT_HANDLER: LazyLock<Mutex<Option<Arc<SafepointHandler>>>> =
+    LazyLock::new(|| Mutex::new(None));
 
 static GLOBAL_OFFSET: AtomicUsize = AtomicUsize::new(0);
 
-static IDENTIFIERS_AVAILABLE_AFTER_BOOT: Lazy<Mutex<HashSet<InternedString>>> =
-    Lazy::new(|| Mutex::new(HashSet::default()));
+static IDENTIFIERS_AVAILABLE_AFTER_BOOT: LazyLock<Mutex<HashSet<InternedString>>> =
+    LazyLock::new(|| Mutex::new(HashSet::default()));
 
-static EVENT_READER: OnceCell<EventReader> = OnceCell::new();
+static EVENT_READER: OnceLock<EventReader> = OnceLock::new();
 
 static CTX: &str = "*helix.cx*";
 static CONFIG: &str = "*helix.config*";
@@ -258,8 +258,8 @@ fn setup() -> Engine {
 }
 
 // The Steel scripting engine instance. This is what drives the whole integration.
-pub static GLOBAL_ENGINE: Lazy<Mutex<steel::steel_vm::engine::Engine>> =
-    Lazy::new(|| Mutex::new(setup()));
+pub static GLOBAL_ENGINE: LazyLock<Mutex<steel::steel_vm::engine::Engine>> =
+    LazyLock::new(|| Mutex::new(setup()));
 
 static GENERATION: AtomicUsize = AtomicUsize::new(0);
 
@@ -414,7 +414,7 @@ where
     res
 }
 
-static BUFFER_EXTENSION_KEYMAP: Lazy<RwLock<BufferExtensionKeyMap>> = Lazy::new(|| {
+static BUFFER_EXTENSION_KEYMAP: LazyLock<RwLock<BufferExtensionKeyMap>> = LazyLock::new(|| {
     RwLock::new(BufferExtensionKeyMap {
         map: HashMap::new(),
         reverse: HashMap::new(),
@@ -443,7 +443,7 @@ struct LspCallRegistry {
     map: HashMap<LspCallRegistryId, LspKind>,
 }
 
-static LSP_CALL_REGISTRY: Lazy<RwLock<LspCallRegistry>> = Lazy::new(|| {
+static LSP_CALL_REGISTRY: LazyLock<RwLock<LspCallRegistry>> = LazyLock::new(|| {
     RwLock::new(LspCallRegistry {
         map: HashMap::new(),
     })
@@ -548,7 +548,11 @@ fn add_reverse_mapping(key: usize, label: String) {
 }
 
 fn load_component_api(engine: &mut Engine, generate_sources: bool) {
-    let module = helix_component_module(generate_sources);
+    let (module, builtin_components_module) = helix_component_module(generate_sources);
+    engine.register_steel_module(
+        "helix/components.scm".to_string(),
+        builtin_components_module,
+    );
     engine.register_module(module);
 }
 
@@ -975,9 +979,13 @@ fn dynamic_set_option(
     let field_error = move |_| anyhow::anyhow!("Could not parse field `{}`", cloned);
     *jvalue = serde_json::Value::try_from(value)?;
 
-    let config = serde_json::from_value(config).map_err(field_error)?;
+    let mut config: helix_view::editor::Config =
+        serde_json::from_value(config).map_err(field_error)?;
 
     let mut new_config = configuration.load_config();
+    config
+        .statusline
+        .restore_custom_elements(&new_config.editor.statusline, &key);
     new_config.editor = config;
 
     configuration.store_config(new_config);
@@ -1326,6 +1334,7 @@ fn load_theme_api(engine: &mut Engine, generate_sources: bool) {
         .register_fn("add-theme!", add_theme)
         .register_fn("theme-style", get_style)
         .register_fn("theme-set-style!", set_style)
+        .register_fn("theme-set-name!", set_theme_name)
         .register_fn("string->color", string_to_color)
         .register_fn_with_ctx(CTX, "get-theme", get_theme)
         .register_fn_with_ctx(CTX, "current-theme", current_theme)
@@ -1410,6 +1419,12 @@ fn set_style(theme: &mut SteelTheme, name: String, style: helix_view::theme::Sty
     theme.0.set(name, style)
 }
 
+// Rename a cloned theme so it registers under a fresh name. Otherwise load()
+// would shadow it with the on-disk theme of the same name.
+fn set_theme_name(theme: &mut SteelTheme, name: String) {
+    theme.0.set_name(name)
+}
+
 fn string_to_color(string: SteelString) -> Result<Color, anyhow::Error> {
     // TODO: Don't expose this directly
     helix_view::theme::ThemePalette::string_to_rgb(string.as_str()).map_err(anyhow::Error::msg)
@@ -1477,27 +1492,70 @@ fn load_editor_api(engine: &mut Engine, generate_sources: bool) {
                 cx.editor.documents.get(&doc).map(|x| x.is_modified())
             },
         )
+        // Counts of the document's own diagnostics by severity, as (hints info warnings errors).
+        // Mirrors the fold in helix-term/src/ui/statusline.rs::render_diagnostics.
+        .register_fn_with_ctx(
+            CTX,
+            "editor-document-diagnostic-counts",
+            |cx: &mut Context, doc: DocumentId| -> Option<Vec<usize>> {
+                cx.editor.documents.get(&doc).map(|document| {
+                    let counts =
+                        document
+                            .diagnostics()
+                            .iter()
+                            .fold((0, 0, 0, 0), |mut counts, diag| {
+                                match diag.severity {
+                                    Some(Severity::Hint) | None => counts.0 += 1,
+                                    Some(Severity::Info) => counts.1 += 1,
+                                    Some(Severity::Warning) => counts.2 += 1,
+                                    Some(Severity::Error) => counts.3 += 1,
+                                }
+                                counts
+                            });
+                    vec![counts.0, counts.1, counts.2, counts.3]
+                })
+            },
+        )
         .register_fn_with_ctx(
             CTX,
             "editor-document-reload",
             |cx: &mut Context, doc: DocumentId| -> anyhow::Result<()> {
-                let path = cx
-                    .editor
-                    .documents
-                    .get(&doc)
-                    .and_then(|x| x.path().map(ToOwned::to_owned));
-                for (view, _) in cx.editor.tree.views_mut() {
-                    if let Some(x) = cx.editor.documents.get_mut(&doc) {
-                        let trust_full = cx
-                            .editor
-                            .workspace_trust
-                            .query(
-                                x.workspace_root(),
-                                helix_loader::workspace_trust::TrustQuery::Git,
-                            )
-                            .is_trusted();
+                let scrolloff = cx.editor.config().scrolloff;
+                let focused_view_id = view!(cx.editor).id;
 
-                        x.reload(view, &cx.editor.diff_providers, trust_full)?;
+                let (path, view_ids) = {
+                    let Some(x) = cx.editor.documents.get_mut(&doc) else {
+                        return Ok(());
+                    };
+
+                    let mut view_ids: Vec<_> = x.selections().keys().copied().collect();
+                    if view_ids.is_empty() {
+                        x.ensure_view_init(focused_view_id);
+                        view_ids.push(focused_view_id);
+                    }
+
+                    (x.path().map(|path| path.to_path_buf()), view_ids)
+                };
+
+                let x = doc_mut!(cx.editor, &doc);
+                let view = view_mut!(cx.editor, view_ids[0]);
+                view.sync_changes(x);
+
+                let trust_full = cx
+                    .editor
+                    .workspace_trust
+                    .query(
+                        x.workspace_root(),
+                        helix_loader::workspace_trust::TrustQuery::Git,
+                    )
+                    .is_trusted();
+                x.reload(view, &cx.editor.diff_providers, trust_full)?;
+
+                for view_id in view_ids {
+                    let view = view_mut!(cx.editor, view_id);
+                    if view.doc == doc {
+                        view.sync_changes(x);
+                        view.ensure_cursor_in_view(x, scrolloff);
                     }
                 }
                 if let Some(path) = path {
@@ -2324,19 +2382,12 @@ impl HelixConfiguration {
             toml_value.get("persistent-diagnostic-sources").is_some();
 
         // Existing language config:
-        let mut existing_config = self
+        let existing_config = self
             .language_configuration
             .load()
             .language_configs()
             .find(|x| x.language_id == language.as_str())
-            .unwrap()
-            .clone();
-
-        if toml_value.get("scope").is_none() {
-            toml_value
-                .as_table_mut()
-                .and_then(|x| x.insert("scope".to_string(), existing_config.scope.into()));
-        }
+            .cloned();
 
         for need_empty in ["file-types", "shebangs", "roots"] {
             if toml_value.get(need_empty).is_none() {
@@ -2346,99 +2397,113 @@ impl HelixConfiguration {
             }
         }
 
-        let new_config: LanguageConfiguration = toml_value.try_into()?;
+        let existing_config = if let Some(mut existing_config) = existing_config {
+            if toml_value.get("scope").is_none() {
+                toml_value
+                    .as_table_mut()
+                    .and_then(|x| x.insert("scope".to_string(), existing_config.scope.into()));
+            }
 
-        if let Some(id) = new_config.language_server_language_id {
-            existing_config.language_server_language_id = Some(id);
-        }
+            let new_config: LanguageConfiguration = toml_value.try_into()?;
 
-        // Take the new scope, since its already set to the old one as a default.
-        existing_config.scope = new_config.scope;
+            if let Some(id) = new_config.language_server_language_id {
+                existing_config.language_server_language_id = Some(id);
+            }
 
-        if !new_config.file_types.is_empty() {
-            existing_config.file_types = new_config.file_types;
-        }
+            // Take the new scope, since its already set to the old one as a default.
+            existing_config.scope = new_config.scope;
 
-        if !new_config.shebangs.is_empty() {
-            existing_config.shebangs = new_config.shebangs;
-        }
+            if !new_config.file_types.is_empty() {
+                existing_config.file_types = new_config.file_types;
+            }
 
-        if !new_config.roots.inner.is_empty() {
-            existing_config.roots = new_config.roots;
-        }
+            if !new_config.shebangs.is_empty() {
+                existing_config.shebangs = new_config.shebangs;
+            }
 
-        if let Some(comment_tokens) = new_config.comment_tokens {
-            existing_config.comment_tokens = Some(comment_tokens);
-        }
+            if !new_config.roots.inner.is_empty() {
+                existing_config.roots = new_config.roots;
+            }
 
-        if let Some(block_comment_tokens) = new_config.block_comment_tokens {
-            existing_config.block_comment_tokens = Some(block_comment_tokens);
-        }
+            if let Some(comment_tokens) = new_config.comment_tokens {
+                existing_config.comment_tokens = Some(comment_tokens);
+            }
 
-        if let Some(text_width) = new_config.text_width {
-            existing_config.text_width = Some(text_width);
-        }
+            if let Some(block_comment_tokens) = new_config.block_comment_tokens {
+                existing_config.block_comment_tokens = Some(block_comment_tokens);
+            }
 
-        if let Some(soft_wrap) = new_config.soft_wrap {
-            existing_config.soft_wrap = Some(soft_wrap);
-        }
+            if let Some(text_width) = new_config.text_width {
+                existing_config.text_width = Some(text_width);
+            }
 
-        if auto_format_present {
-            existing_config.auto_format = new_config.auto_format;
-        }
+            if let Some(soft_wrap) = new_config.soft_wrap {
+                existing_config.soft_wrap = Some(soft_wrap);
+            }
 
-        if let Some(formatter) = new_config.formatter {
-            existing_config.formatter = Some(formatter);
-        }
+            if auto_format_present {
+                existing_config.auto_format = new_config.auto_format;
+            }
 
-        if let Some(path_complation) = new_config.path_completion {
-            existing_config.path_completion = Some(path_complation);
-        }
+            if let Some(formatter) = new_config.formatter {
+                existing_config.formatter = Some(formatter);
+            }
 
-        if diagnostic_severity_present {
-            existing_config.diagnostic_severity = new_config.diagnostic_severity;
-        }
+            if let Some(path_complation) = new_config.path_completion {
+                existing_config.path_completion = Some(path_complation);
+            }
 
-        if let Some(grammar) = new_config.grammar {
-            existing_config.grammar = Some(grammar);
-        }
+            if diagnostic_severity_present {
+                existing_config.diagnostic_severity = new_config.diagnostic_severity;
+            }
 
-        if let Some(injection_regex) = new_config.injection_regex {
-            existing_config.injection_regex = Some(injection_regex);
-        }
+            if let Some(grammar) = new_config.grammar {
+                existing_config.grammar = Some(grammar);
+            }
 
-        if language_servers_present {
-            existing_config.language_servers = new_config.language_servers;
-        }
+            if let Some(injection_regex) = new_config.injection_regex {
+                existing_config.injection_regex = Some(injection_regex);
+            }
 
-        if let Some(indent) = new_config.indent {
-            existing_config.indent = Some(indent);
-        }
+            if language_servers_present {
+                existing_config.language_servers = new_config.language_servers;
+            }
 
-        if let Some(debugger) = new_config.debugger {
-            existing_config.debugger = Some(debugger);
-        }
+            if let Some(indent) = new_config.indent {
+                existing_config.indent = Some(indent);
+            }
 
-        if let Some(auto_pairs) = new_config.auto_pairs {
-            existing_config.auto_pairs = Some(auto_pairs);
-        }
+            if let Some(debugger) = new_config.debugger {
+                existing_config.debugger = Some(debugger);
+            }
 
-        if let Some(rulers) = new_config.rulers {
-            existing_config.rulers = Some(rulers);
-        }
+            if let Some(auto_pairs) = new_config.auto_pairs {
+                existing_config.auto_pairs = Some(auto_pairs);
+            }
 
-        if let Some(workspace_lsp_roots) = new_config.workspace_lsp_roots {
-            existing_config.workspace_lsp_roots = Some(workspace_lsp_roots);
-        }
+            if let Some(rulers) = new_config.rulers {
+                existing_config.rulers = Some(rulers);
+            }
 
-        if let Some(rainbow) = new_config.rainbow_brackets {
-            existing_config.rainbow_brackets = Some(rainbow);
-        }
+            if let Some(workspace_lsp_roots) = new_config.workspace_lsp_roots {
+                existing_config.workspace_lsp_roots = Some(workspace_lsp_roots);
+            }
 
-        if persistent_diagnostic_sources_present {
-            existing_config.persistent_diagnostic_sources =
-                new_config.persistent_diagnostic_sources;
-        }
+            if let Some(rainbow) = new_config.rainbow_brackets {
+                existing_config.rainbow_brackets = Some(rainbow);
+            }
+
+            if persistent_diagnostic_sources_present {
+                existing_config.persistent_diagnostic_sources =
+                    new_config.persistent_diagnostic_sources;
+            }
+
+            existing_config
+        } else if toml_value.get("scope").is_some() {
+            toml_value.try_into()?
+        } else {
+            anyhow::bail!("The `scope` field is mandatory when defining a new language.");
+        };
 
         self.update_individual_language_config(IndividualLanguageConfiguration {
             config: existing_config,
@@ -4101,7 +4166,7 @@ fn acquire_context_lock(
     callback_fn: SteelVal,
     place: Option<SteelVal>,
 ) -> steel::rvals::Result<()> {
-    static TASK_DONE: Lazy<SteelVal> = Lazy::new(|| SteelVal::SymbolV("done".into()));
+    static TASK_DONE: LazyLock<SteelVal> = LazyLock::new(|| SteelVal::SymbolV("done".into()));
 
     match (&callback_fn, &place) {
         (SteelVal::Closure(_), Some(SteelVal::CustomStruct(_))) => {}
